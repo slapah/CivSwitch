@@ -1,3 +1,34 @@
+> ## This fork: ns2jb → CivSwitch FS-acquisition port
+>
+> This fork adds [`ns2jb-port/`](ns2jb-port/) — a research port of the **ns2jb**
+> reserved-gap `fs` race onto the CivSwitch Civilization VII Remote JS Loader.
+>
+> **What it does.** CivSwitch (below) gets userland JS execution inside the Civ 7
+> cartridge. This port chains that into a **Switch 2 `fs`-process takeover**: a small
+> bridge (`civ_bridge.js`) runs inside the loader and talks over the network to a PC
+> engine, which spins up raw kernel worker threads on the console and drives the ns2jb
+> reserved-gap allocator race in the `fs` sysmodule — overwriting a canary, leaking the
+> cache, and building a filesystem primitive. All from the Civ 7 game instead of
+> SmileBASIC.
+>
+> **Goal.** A complete, self-contained FS-acquisition exploit launched entirely from the
+> Civ 7 cartridge (no second entrypoint), usable to install homebrew/custom saves on the
+> author's own hardware.
+>
+> **Progress so far.** The chain runs end-to-end through the hardest stages: the raw-svc
+> worker wave is hardware-qualified, the pin gate passes, the **overwrite primitive lands**
+> (the canary flips at ~20%/wave on a healthy save), and the combined cache-leak install
+> completes and advances into the `cache-address-alias` phase (deepest single run ~101
+> cases). Every deterministic logic blocker is cleared. The remaining wall is a *sporadic
+> console wedge* ~130–160 waves deep in the full leak sweep, plus save-FS health
+> sensitivity (a fresh throwaway save is needed per run).
+>
+> **Details:** [`ns2jb-port/FINDINGS.md`](ns2jb-port/FINDINGS.md) · full status and open
+> problems in **[issue #1](../../issues/1)**.
+>
+> *Authored for research/documentation; network addresses, hostnames and local paths are redacted.*
+>
+> ---
 # CivSwitch
 
 XSS toolchain for the Switch 1 edition of Civilization 7.  
